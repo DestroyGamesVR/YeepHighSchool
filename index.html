@@ -108,11 +108,6 @@
     font-size:1.05rem;
     margin:0 0 30px;
   }
-  .chalk-underline{
-    display:inline-block;
-    position:relative;
-  }
-  .chalk-underline svg{position:absolute; left:0; bottom:-10px; width:100%; height:12px;}
 
   .cta-row{display:flex; gap:14px; flex-wrap:wrap;}
   .btn{
@@ -145,17 +140,6 @@
     color:var(--brass);
     margin:0 0 14px;
   }
-  .period{
-    display:flex;
-    justify-content:space-between;
-    font-family:'Space Mono',monospace;
-    font-size:0.85rem;
-    padding:9px 0;
-    border-bottom:1px dashed var(--line);
-    color:#dde3d6;
-  }
-  .period:last-child{border-bottom:none;}
-  .period span:first-child{color:var(--chalk); font-weight:700;}
 
   /* ---------- sections ---------- */
   section{padding:88px 6vw;}
@@ -222,7 +206,6 @@
     margin:0 0 10px 8px;
     vertical-align:middle;
   }
-  .level-beginner{background:rgba(43,59,47,0.1); border:1px solid var(--board); color:var(--board);}
   .level-pro{background:var(--brass); color:var(--board-2);}
   .level-all{background:transparent; border:1px solid #b9b096; color:#5a5a4f;}
   .course h4{
@@ -298,82 +281,6 @@
   }
   .faculty-card.open .role{color:var(--red-pen);}
   .faculty-card.open p{color:#5a5a4f;}
-
-  /* teacher applications */
-  .apply-grid{
-    display:grid;
-    grid-template-columns:1.3fr 1fr;
-    gap:40px;
-    align-items:start;
-  }
-  .apply-form{
-    background:var(--paper);
-    border:2px solid var(--ink);
-    padding:32px;
-    display:flex;
-    flex-direction:column;
-    gap:18px;
-  }
-  .apply-form label{
-    display:flex;
-    flex-direction:column;
-    gap:8px;
-    font-family:'Space Mono',monospace;
-    font-size:0.75rem;
-    letter-spacing:0.06em;
-    text-transform:uppercase;
-    color:#5a5a4f;
-  }
-  .apply-form input[type="text"],
-  .apply-form textarea{
-    font-family:'Work Sans',sans-serif;
-    font-size:0.95rem;
-    text-transform:none;
-    letter-spacing:normal;
-    padding:11px 12px;
-    border:1px solid #b9b096;
-    background:#fff;
-    color:var(--ink);
-    border-radius:var(--radius);
-    resize:vertical;
-  }
-  .apply-form input[type="text"]:focus,
-  .apply-form textarea:focus{
-    outline:2px solid var(--brass);
-    outline-offset:1px;
-  }
-  .field-label{display:block; margin-bottom:8px;}
-  .level-options{
-    display:flex;
-    gap:18px;
-    flex-wrap:wrap;
-  }
-  .level-opt{
-    flex-direction:row !important;
-    align-items:center;
-    gap:6px !important;
-    text-transform:none;
-    font-family:'Work Sans',sans-serif;
-    font-size:0.88rem;
-    color:var(--ink);
-  }
-  .apply-note{
-    background:var(--board);
-    color:var(--chalk);
-    padding:28px 26px;
-    border-radius:var(--radius);
-    border-top:4px solid var(--brass);
-  }
-  .apply-note .role{
-    font-family:'Space Mono',monospace;
-    font-size:0.7rem;
-    letter-spacing:0.12em;
-    text-transform:uppercase;
-    color:var(--brass);
-    display:block;
-    margin-bottom:14px;
-  }
-  .apply-note .steps li{border-color:rgba(238,240,230,0.15); color:#dde3d6; font-size:0.88rem;}
 
   .cs-tag{
     display:inline-block;
@@ -485,7 +392,6 @@
   @media (max-width:820px){
     .hero{grid-template-columns:1fr;}
     .join{grid-template-columns:1fr;}
-    .apply-grid{grid-template-columns:1fr;}
     .section-head{flex-direction:column; align-items:flex-start;}
     .section-note{text-align:left;}
     nav ul{gap:16px; font-size:0.75rem;}
@@ -504,6 +410,7 @@
       <li><a href="#faculty">Faculty</a></li>
       <li><a href="apply-to-teach.html">Apply to Teach</a></li>
       <li><a href="#join">Enroll</a></li>
+      <li><a href="https://discord.gg/A3SYRf37Yf" target="_blank" rel="noopener">Discord</a></li>
       <li><a href="#rules">Handbook</a></li>
     </ul>
   </nav>
@@ -515,7 +422,7 @@
       <p class="sub">A real classroom world inside Yeeps VR — teachers run live periods for total beginners and seasoned pros alike. Bring a headset and a topic; the chalkboard's yours.</p>
       <div class="cta-row">
         <a href="#join" class="btn btn-primary">Get the portal code</a>
-        <a href="apply-to-teach.html" class="btn btn-ghost">Apply to teach</a>
+        <a href="https://discord.gg/A3SYRf37Yf" target="_blank" rel="noopener" class="btn btn-ghost">Join Discord</a>
       </div>
     </div>
 
@@ -603,7 +510,6 @@
     </div>
   </div>
 </section>
-
 
 <section class="rules" id="rules">
   <div class="wrap">
@@ -716,7 +622,7 @@
       </ul>
       <div class="cta-row" style="margin-top:22px;">
         <a href="enroll.html" class="btn btn-primary">Enroll as a student</a>
-        <a href="apply-to-teach.html" class="btn btn-ghost">Apply to teach</a>
+        <a href="https://discord.gg/A3SYRf37Yf" target="_blank" rel="noopener" class="btn btn-ghost">Join Official Discord</a>
       </div>
     </div>
     <div class="portal-code">
