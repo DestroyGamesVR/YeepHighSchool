@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>yeepshighschool — Applications</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Rye&family=Space+Mono:wght@400;700&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --board:#22352a;
+    --board-2:#1a2a21;
+    --chalk:#eef0e6;
+    --paper:#e9e2cd;
+    --ink:#1c2420;
+    --brass:#c69a3c;
+    --red-pen:#a4372c;
+    --line:rgba(238,240,230,0.18);
+    --radius:2px;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Work Sans',sans-serif;
+    line-height:1.5;
+  }
+
+  /* Navigation & Banner */
+  .ribbon{
+    background:var(--ink);
+    color:var(--paper);
+    text-align:center;
+    font-family:'Space Mono',monospace;
+    font-size:0.72rem;
+    letter-spacing:0.12em;
+    text-transform:uppercase;
+    padding:7px 10px;
+  }
+  header{
+    background:
+      radial-gradient(ellipse at 20% 20%, rgba(255,255,255,0.03), transparent 40%),
+      linear-gradient(180deg, var(--board) 0%, var(--board-2) 100%);
+    color:var(--chalk);
+    padding:32px 6vw;
+    border-bottom:10px solid var(--brass);
+  }
+  nav{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    max-width:1180px;
+    margin:0 auto;
+    font-family:'Space Mono',monospace;
+    font-size:0.85rem;
+  }
+  nav .brand{
+    font-family:'Rye',serif;
+    font-size:1.3rem;
+    color:var(--brass);
+    text-decoration:none;
+  }
+
+  /* Main Container */
+  .container{
+    max-width:1180px;
+    margin:40px auto;
+    padding:0 6vw;
+    display:grid;
+    grid-template-columns: 1fr 1fr;
+    gap:40px;
+  }
+
+  .panel{
+    background:#fff;
+    border:2px solid var(--ink);
+    padding:30px;
+    border-radius:var(--radius);
+  }
+
+  h2{
+    font-family:'Rye',serif;
+    margin-top:0;
+    color:var(--ink);
+  }
+
+  /* Form Elements */
+  .form-group{
+    margin-bottom:18px;
+  }
+  label{
+    display:block;
+    font-family:'Space Mono',monospace;
+    font-size:0.8rem;
+    text-transform:uppercase;
+    letter-spacing:0.05em;
+    margin-bottom:6px;
+  }
+  input, select, textarea{
+    width:100%;
+    padding:10px;
+    border:1px solid #b9b096;
+    background:var(--paper);
+    font-family:'Work Sans',sans-serif;
+    font-size:0.95rem;
+  }
+  button{
+    background:var(--brass);
+    color:var(--board-2);
+    font-family:'Space Mono',monospace;
+    font-weight:bold;
+    border:none;
+    padding:12px 20px;
+    cursor:pointer;
+    width:100%;
+    font-size:0.9rem;
+    letter-spacing:0.05em;
+    text-transform:uppercase;
+  }
+  button:hover{
+    opacity:0.9;
+  }
+
+  /* Live Display Cards */
+  .app-card{
+    background:var(--paper);
+    border:1px solid #b9b096;
+    padding:16px;
+    margin-bottom:12px;
+    border-left:4px solid var(--red-pen);
+  }
+  .app-card .meta{
+    font-family:'Space Mono',monospace;
+    font-size:0.75rem;
+    color:var(--red-pen);
+    display:flex;
+    justify-content:space-between;
+  }
+  .app-card h4{
+    margin:8px 0 4px;
+    font-family:'Rye',serif;
+  }
+  .app-card p{
+    margin:0;
+    font-size:0.88rem;
+    color:#4a4a40;
+  }
+
+  @media(max-width: 768px){
+    .container{ grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="ribbon">Faculty Application Portal</div>
+
+<header>
+  <nav>
+    <a href="#" class="brand">yeepshighschool</a>
+  </nav>
+</header>
+
+<div class="container">
+  <!-- Application Form -->
+  <div class="panel">
+    <h2>Apply to Teach</h2>
+    <form id="teacherForm" action="https://api.web3forms.com/submit" method="POST">
+      
+      <!-- REPLACE "YOUR_ACCESS_KEY_HERE" WITH YOUR FREE WEB3FORMS ACCESS KEY -->
+      <input type="hidden" name="access_key" value="YOUR_ACCESS_KEY_HERE">
+      <input type="hidden" name="subject" value="New Teacher Application">
+
+      <div class="form-group">
+        <label for="username">VR Username</label>
+        <input type="text" id="username" name="username" placeholder="e.g. Mr. Redbobo" required>
+      </div>
+
+      <div class="form-group">
+        <label for="classType">Subject / Class Title</label>
+        <input type="text" id="classType" name="classType" placeholder="e.g. Advanced Wiring Logic" required>
+      </div>
+
+      <div class="form-group">
+        <label for="level">Skill Level Offered</label>
+        <select id="level" name="level">
+          <option value="All Levels">All Levels</option>
+          <option value="Beginner">Beginner</option>
+          <option value="Pro">Pro</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="details">Class Description</label>
+        <textarea id="details" name="details" rows="3" placeholder="Describe what you will teach..." required></textarea>
+      </div>
+
+      <button type="submit">Submit Application</button>
+    </form>
+  </div>
+
+  <!-- Applications Display Section -->
+  <div class="panel">
+    <h2>Submitted Applications</h2>
+    <div id="applicationsList">
+      <!-- Applications will display here dynamically -->
+    </div>
+  </div>
+</div>
+
+<script>
+  // Handle form submission locally so it displays on page instantly
+  document.getElementById('teacherForm').addEventListener('submit', function(e) {
+    const username = document.getElementById('username').value;
+    const classType = document.getElementById('classType').value;
+    const level = document.getElementById('level').value;
+    const details = document.getElementById('details').value;
+
+    const newApp = { username, classType, level, details };
+
+    // Save to local storage
+    let apps = JSON.parse(localStorage.getItem('teacherApps') || '[]');
+    apps.unshift(newApp);
+    localStorage.setItem('teacherApps', JSON.stringify(apps));
+
+    renderApps();
+  });
+
+  // Display applications on the page
+  function renderApps() {
+    const container = document.getElementById('applicationsList');
+    let apps = JSON.parse(localStorage.getItem('teacherApps') || '[]');
+
+    if(apps.length === 0){
+      container.innerHTML = '<p style="color:#777; font-size:0.9rem;">No applications submitted yet.</p>';
+      return;
+    }
+
+    container.innerHTML = apps.map(app => `
+      <div class="app-card">
+        <div class="meta">
+          <span>${app.username}</span>
+          <span>${app.level}</span>
+        </div>
+        <h4>${app.classType}</h4>
+        <p>${app.details}</p>
+      </div>
+    `).join('');
+  }
+
+  // Initial load
+  renderApps();
+</script>
+
+</body>
+</html>
