@@ -400,7 +400,7 @@
 </head>
 <body>
 
-<div class="ribbon">OPENING SOON · CW CODE: yeepshighschool · FACULTY CONFIRMED</div>
+<div class="ribbon">OPENING SOON · CW CODE: yeephighschool · FACULTY CONFIRMED</div>
 
 <header>
   <nav>
@@ -631,8 +631,8 @@
       </div>
     </div>
     <div class="portal-code">
-      <span class="label">World Portal · CW Code</span>
-      <div class="code">yeepshighschool</div>
+      <span class="label">WORLD PORTAL · CW CODE</span>
+      <div class="code">yeephighschool</div>
       <br>
       <span class="label">Office Hours</span>
       <div class="code">Daily, 6P–11P EST</div>
@@ -644,6 +644,32 @@
   <div><strong>yeepshighschool</strong> — a Destroy Games VR production</div>
   <div>Built for Yeeps VR · Meta Quest</div>
 </footer>
+
+<script>
+  // SECURE WEBHOOK IMPLEMENTATION
+  // To protect your Discord webhook URL from being publicly exposed or abused:
+  // 1. Never put the full webhook URL directly in client-side HTML or JavaScript.
+  // 2. Instead, create a backend server endpoint (e.g., using Node.js, Express, or a serverless function like Vercel/Netlify) to receive form data.
+  // 3. Store the webhook URL as an environment variable (.env) on your server.
+  // 4. Have your server relay the payload securely to Discord.
+  
+  async function sendToDiscordSecurely(formData) {
+    try {
+      const response = await fetch('/api/submit-form', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(formData)
+      });
+      if (!response.ok) {
+        throw new Error('Failed to send message securely.');
+      }
+    } catch (error) {
+      console.error('Error submitting form:', error);
+    }
+  }
+</script>
 
 </body>
 </html>
