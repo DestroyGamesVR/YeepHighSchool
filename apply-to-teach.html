@@ -1,321 +1,44 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>yeepshighschool</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Rye&family=Space+Mono:wght@400;700&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-<style>
-  :root{
-    --board:#22352a;
-    --board-2:#1a2a21;
-    --chalk:#eef0e6;
-    --paper:#e9e2cd;
-    --ink:#1c2420;
-    --brass:#c69a3c;
-    --red-pen:#a4372c;
-    --line:rgba(238,240,230,0.18);
-    --radius:2px;
-  }
-  *{box-sizing:border-box;}
-  html{scroll-behavior:smooth;}
-  body{
-    margin:0;
-    background:var(--paper);
-    color:var(--ink);
-    font-family:'Work Sans',sans-serif;
-    line-height:1.5;
-  }
-
-  /* Top Ribbon */
-  .ribbon{
-    background:var(--ink);
-    color:var(--paper);
-    text-align:center;
-    font-family:'Space Mono',monospace;
-    font-size:0.72rem;
-    letter-spacing:0.12em;
-    text-transform:uppercase;
-    padding:7px 10px;
-  }
-
-  /* Header */
-  header{
-    background:
-      radial-gradient(ellipse at 20% 20%, rgba(255,255,255,0.03), transparent 40%),
-      linear-gradient(180deg, var(--board) 0%, var(--board-2) 100%);
-    color:var(--chalk);
-    padding:64px 6vw 48px;
-    position:relative;
-    border-bottom:10px solid var(--brass);
-  }
-  nav{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    max-width:1180px;
-    margin:0 auto 56px;
-    font-family:'Space Mono',monospace;
-    font-size:0.85rem;
-  }
-  nav .brand{
-    font-family:'Rye',serif;
-    font-size:1.1rem;
-    color:var(--brass);
-  }
-  nav ul{
-    list-style:none;
-    display:flex;
-    gap:28px;
-    margin:0;
-    padding:0;
-  }
-  nav a{text-decoration:none; opacity:0.85; padding-bottom:2px;}
-  nav a:hover{opacity:1;}
-
-  .hero{
-    max-width:1180px;
-    margin:0 auto;
-    display:grid;
-    grid-template-columns:1.15fr 0.85fr;
-    gap:48px;
-    align-items:end;
-  }
-  .hero-eyebrow{
-    font-family:'Space Mono',monospace;
-    font-size:0.75rem;
-    letter-spacing:0.18em;
-    text-transform:uppercase;
-    color:var(--brass);
-    margin-bottom:18px;
-  }
-  h1.hero-title{
-    font-family:'Rye',serif;
-    font-size:clamp(2.6rem,5.4vw,4.6rem);
-    line-height:1.02;
-    margin:0 0 22px;
-  }
-  .hero p.sub{
-    max-width:46ch;
-    color:#cfd6c9;
-    font-size:1.05rem;
-    margin:0 0 30px;
-  }
-
-  .cta-row{display:flex; gap:14px; flex-wrap:wrap;}
-  .btn{
-    font-family:'Space Mono',monospace;
-    font-size:0.85rem;
-    text-decoration:none;
-    padding:13px 22px;
-    border-radius:var(--radius);
-    display:inline-block;
-    border:1px solid transparent;
-    cursor:pointer;
-  }
-  .btn-primary{background:var(--brass); color:var(--board-2); font-weight:700;}
-  .btn-ghost{border-color:var(--line); color:var(--chalk);}
-
-  /* Sections */
-  section{padding:64px 6vw;}
-  .wrap{max-width:1180px; margin:0 auto;}
-  .section-head{
-    display:flex;
-    justify-content:space-between;
-    align-items:flex-end;
-    gap:24px;
-    margin-bottom:32px;
-    border-bottom:2px solid var(--ink);
-    padding-bottom:18px;
-  }
-  .section-head .num{
-    font-family:'Space Mono',monospace;
-    font-size:0.78rem;
-    text-transform:uppercase;
-    color:var(--red-pen);
-  }
-  h2.section-title{
-    font-family:'Rye',serif;
-    font-size:clamp(1.8rem,3.4vw,2.6rem);
-    margin:6px 0 0;
-  }
-
-  /* Form & Live Cards Layout */
-  .app-grid{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:32px;
-  }
-  .panel{
-    background:#fff;
-    border:2px solid var(--ink);
-    padding:28px;
-  }
-  .form-group{
-    margin-bottom:16px;
-  }
-  label{
-    display:block;
-    font-family:'Space Mono',monospace;
-    font-size:0.75rem;
-    text-transform:uppercase;
-    margin-bottom:6px;
-  }
-  input, select, textarea{
-    width:100%;
-    padding:10px;
-    border:1px solid #b9b096;
-    background:var(--paper);
-    font-family:'Work Sans',sans-serif;
-    font-size:0.95rem;
-  }
-
-  /* Live Cards */
-  .app-card{
-    background:var(--paper);
-    border:1px solid #b9b096;
-    padding:16px;
-    margin-bottom:12px;
-    border-left:4px solid var(--red-pen);
-  }
-  .app-card .meta{
-    font-family:'Space Mono',monospace;
-    font-size:0.75rem;
-    color:var(--red-pen);
-    display:flex;
-    justify-content:space-between;
-  }
-  .app-card h4{
-    margin:6px 0;
-    font-family:'Rye',serif;
-  }
-  .app-card p{
-    margin:0;
-    font-size:0.88rem;
-    color:#4a4a40;
-  }
-
-  footer{
-    background:var(--board-2);
-    color:#8c9385;
-    padding:36px 6vw;
-    font-family:'Space Mono',monospace;
-    font-size:0.75rem;
-    display:flex;
-    justify-content:space-between;
-  }
-
-  @media(max-width:820px){
-    .hero, .app-grid{grid-template-columns:1fr;}
-  }
-</style>
-</head>
-<body>
-
-<div class="ribbon">OPENING SOON · CW CODE: yeephighschool · FACULTY CONFIRMED</div>
-
-<header>
-  <nav>
-    <div class="brand">yeepshighschool</div>
-    <ul>
-      <li><a href="#apply">Apply</a></li>
-      <li><a href="#submissions">View Apps</a></li>
-      <li><a href="https://discord.gg/A3SYRf37Yf" target="_blank" rel="noopener">Discord</a></li>
-    </ul>
-  </nav>
-
-  <div class="hero">
-    <div>
-      <div class="hero-eyebrow">A Destroy Games VR World</div>
-      <h1 class="hero-title">yeepshighschool</h1>
-      <p class="sub">A real classroom world inside Yeeps VR — teachers run live periods for total beginners and seasoned pros alike.</p>
-      <div class="cta-row">
-        <a href="#apply" class="btn btn-primary">Apply to Teach</a>
-        <a href="https://discord.gg/A3SYRf37Yf" target="_blank" rel="noopener" class="btn btn-ghost">Join Discord</a>
-      </div>
-    </div>
-  </div>
-</header>
-
-<section id="apply">
-  <div class="wrap">
-    <div class="section-head">
-      <div>
-        <span class="num">01 — Live Portal</span>
-        <h2 class="section-title">Teacher Applications</h2>
-      </div>
-    </div>
-
-    <div class="app-grid">
-      <!-- Form Panel -->
-      <div class="panel">
-        <h3 style="font-family:'Rye',serif; margin-top:0;">Submit Application</h3>
-        <form id="teacherForm" action="https://api.web3forms.com/submit" method="POST">
-          
-          <!-- REPLACE "YOUR_ACCESS_KEY_HERE" WITH YOUR WEB3FORMS KEY -->
-          <input type="hidden" name="access_key" value="YOUR_ACCESS_KEY_HERE">
-          <input type="hidden" name="subject" value="New Teacher Application">
-
-          <div class="form-group">
-            <label for="username">VR Username</label>
-            <input type="text" id="username" name="username" placeholder="e.g. Mr. Redbobo" required>
-          </div>
-
-          <div class="form-group">
-            <label for="classType">Class / Subject</label>
-            <input type="text" id="classType" name="classType" placeholder="e.g. Advanced Wiring" required>
-          </div>
-
-          <div class="form-group">
-            <label for="level">Target Level</label>
-            <select id="level" name="level">
-              <option value="All Levels">All Levels</option>
-              <option value="Beginner">Beginner</option>
-              <option value="Pro">Pro</option>
-            </select>
-          </div>
-
-          <div class="form-group">
-            <label for="details">Class Description</label>
-            <textarea id="details" name="details" rows="3" placeholder="What will you teach?" required></textarea>
-          </div>
-
-          <button type="submit" class="btn btn-primary" style="width:100%;">Submit Application</button>
-        </form>
-      </div>
-
-      <!-- Applications Feed Panel -->
-      <div class="panel" id="submissions">
-        <h3 style="font-family:'Rye',serif; margin-top:0;">Live Applications Feed</h3>
-        <div id="applicationsList">
-          <!-- Submissions display here automatically -->
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<footer>
-  <div><strong>yeepshighschool</strong> — Destroy Games VR</div>
-  <div>Yeeps VR · Meta Quest</div>
-</footer>
-
 <script>
-  // Display applications on the home page instantly
-  document.getElementById('teacherForm').addEventListener('submit', function(e) {
+  document.getElementById('teacherForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+
     const username = document.getElementById('username').value;
     const classType = document.getElementById('classType').value;
     const level = document.getElementById('level').value;
     const details = document.getElementById('details').value;
 
-    const newApp = { username, classType, level, details };
+    const formData = {
+      // REPLACE THIS STRING WITH YOUR WEB3FORMS ACCESS KEY
+      access_key: "ebd28397-8b6a-4632-8557-c9f8f33b2758", 
+      subject: "New Teacher Application",
+      username: username,
+      classType: classType,
+      level: level,
+      details: details
+    };
 
+    // 1. Send data to Web3Forms in the background
+    try {
+      await fetch("https://api.web3forms.com/submit", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json"
+        },
+        body: JSON.stringify(formData)
+      });
+    } catch (error) {
+      console.error("Submission error:", error);
+    }
+
+    // 2. Save locally so it appears in the list on the page right away
+    const newApp = { username, classType, level, details };
     let apps = JSON.parse(localStorage.getItem('teacherApps') || '[]');
     apps.unshift(newApp);
     localStorage.setItem('teacherApps', JSON.stringify(apps));
 
     renderApps();
+    this.reset();
   });
 
   function renderApps() {
@@ -341,6 +64,3 @@
 
   renderApps();
 </script>
-
-</body>
-</html>
