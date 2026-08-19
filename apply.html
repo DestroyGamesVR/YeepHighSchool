@@ -1,66 +1,407 @@
-<script>
-  document.getElementById('teacherForm').addEventListener('submit', async function(e) {
-    e.preventDefault();
-
-    const username = document.getElementById('username').value;
-    const classType = document.getElementById('classType').value;
-    const level = document.getElementById('level').value;
-    const details = document.getElementById('details').value;
-
-    const formData = {
-      // REPLACE THIS STRING WITH YOUR WEB3FORMS ACCESS KEY
-      access_key: "ebd28397-8b6a-4632-8557-c9f8f33b2758", 
-      subject: "New Teacher Application",
-      username: username,
-      classType: classType,
-      level: level,
-      details: details
-    };
-
-    // 1. Send data to Web3Forms in the background
-    try {
-      await fetch("https://api.web3forms.com/submit", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json"
-        },
-        body: JSON.stringify(formData)
-      });
-    } catch (error) {
-      console.error("Submission error:", error);
-    }
-
-    // 2. Save locally so it appears in the list on the page right away
-    const newApp = { username, classType, level, details };
-    let apps = JSON.parse(localStorage.getItem('teacherApps') || '[]');
-    apps.unshift(newApp);
-    localStorage.setItem('teacherApps', JSON.stringify(apps));
-
-    renderApps();
-    this.reset();
-  });
-
-  function renderApps() {
-    const container = document.getElementById('applicationsList');
-    let apps = JSON.parse(localStorage.getItem('teacherApps') || '[]');
-
-    if(apps.length === 0){
-      container.innerHTML = '<p style="color:#777; font-size:0.9rem;">No applications submitted yet.</p>';
-      return;
-    }
-
-    container.innerHTML = apps.map(app => `
-      <div class="app-card">
-        <div class="meta">
-          <span>${app.username}</span>
-          <span>${app.level}</span>
-        </div>
-        <h4>${app.classType}</h4>
-        <p>${app.details}</p>
-      </div>
-    `).join('');
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>yeepshighschool — Home</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Rye&family=Space+Mono:wght@400;700&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --board:#22352a;
+    --board-2:#1a2a21;
+    --chalk:#eef0e6;
+    --paper:#e9e2cd;
+    --ink:#1c2420;
+    --brass:#c69a3c;
+    --red-pen:#a4372c;
+    --line:rgba(238,240,230,0.18);
+    --radius:2px;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Work Sans',sans-serif;
+    line-height:1.5;
   }
 
-  renderApps();
-</script>
+  /* Top Banner */
+  .ribbon{
+    background:var(--ink);
+    color:var(--paper);
+    text-align:center;
+    font-family:'Space Mono',monospace;
+    font-size:0.72rem;
+    letter-spacing:0.12em;
+    text-transform:uppercase;
+    padding:7px 10px;
+  }
+
+  /* Header */
+  header{
+    background:
+      radial-gradient(ellipse at 20% 20%, rgba(255,255,255,0.03), transparent 40%),
+      linear-gradient(180deg, var(--board) 0%, var(--board-2) 100%);
+    color:var(--chalk);
+    padding:64px 6vw 48px;
+    position:relative;
+    border-bottom:10px solid var(--brass);
+  }
+  nav{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    max-width:1180px;
+    margin:0 auto 56px;
+    font-family:'Space Mono',monospace;
+    font-size:0.85rem;
+  }
+  nav .brand{
+    font-family:'Rye',serif;
+    font-size:1.1rem;
+    color:var(--brass);
+    text-decoration:none;
+  }
+  nav ul{
+    list-style:none;
+    display:flex;
+    gap:28px;
+    margin:0;
+    padding:0;
+  }
+  nav a{text-decoration:none; color:var(--chalk); opacity:0.85; padding-bottom:2px;}
+  nav a:hover{opacity:1; border-bottom:1px solid var(--brass);}
+
+  .hero{
+    max-width:1180px;
+    margin:0 auto;
+    display:grid;
+    grid-template-columns:1.15fr 0.85fr;
+    gap:48px;
+    align-items:end;
+  }
+  .hero-eyebrow{
+    font-family:'Space Mono',monospace;
+    font-size:0.75rem;
+    letter-spacing:0.18em;
+    text-transform:uppercase;
+    color:var(--brass);
+    margin-bottom:18px;
+  }
+  h1.hero-title{
+    font-family:'Rye',serif;
+    font-size:clamp(2.6rem,5.4vw,4.6rem);
+    line-height:1.02;
+    margin:0 0 22px;
+  }
+  .hero p.sub{
+    max-width:46ch;
+    color:#cfd6c9;
+    font-size:1.05rem;
+    margin:0 0 30px;
+  }
+
+  .cta-row{display:flex; gap:14px; flex-wrap:wrap;}
+  .btn{
+    font-family:'Space Mono',monospace;
+    font-size:0.85rem;
+    text-decoration:none;
+    padding:13px 22px;
+    border-radius:var(--radius);
+    display:inline-block;
+    border:1px solid transparent;
+    cursor:pointer;
+  }
+  .btn-primary{background:var(--brass); color:var(--board-2); font-weight:700;}
+  .btn-ghost{border-color:var(--line); color:var(--chalk);}
+
+  .schedule-card{
+    background:rgba(238,240,230,0.05);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    padding:22px 24px;
+  }
+  .schedule-card h3{
+    font-family:'Space Mono',monospace;
+    font-size:0.78rem;
+    letter-spacing:0.14em;
+    text-transform:uppercase;
+    color:var(--brass);
+    margin:0 0 14px;
+  }
+
+  /* Main Sections */
+  section{padding:88px 6vw;}
+  .wrap{max-width:1180px; margin:0 auto;}
+  .section-head{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-end;
+    gap:24px;
+    margin-bottom:44px;
+    border-bottom:2px solid var(--ink);
+    padding-bottom:18px;
+  }
+  .section-head .num{
+    font-family:'Space Mono',monospace;
+    font-size:0.78rem;
+    letter-spacing:0.14em;
+    text-transform:uppercase;
+    color:var(--red-pen);
+  }
+  h2.section-title{
+    font-family:'Rye',serif;
+    font-size:clamp(1.8rem,3.4vw,2.6rem);
+    margin:6px 0 0;
+  }
+
+  /* Course Grid */
+  .courses{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+    gap:2px;
+    background:var(--ink);
+    border:2px solid var(--ink);
+  }
+  .course{
+    background:var(--paper);
+    padding:26px 24px 24px;
+  }
+  .course .period-tag{
+    font-family:'Space Mono',monospace;
+    font-size:0.7rem;
+    letter-spacing:0.1em;
+    text-transform:uppercase;
+    color:var(--red-pen);
+    display:inline-block;
+    margin-bottom:10px;
+  }
+  .course h4{
+    font-family:'Rye',serif;
+    font-size:1.28rem;
+    margin:0 0 10px;
+  }
+  .course p{
+    font-size:0.9rem;
+    color:#4a4a40;
+    margin:0 0 14px;
+  }
+
+  /* Faculty */
+  .faculty{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+    gap:26px;
+  }
+  .faculty-card{
+    background:var(--board);
+    color:var(--chalk);
+    padding:26px 22px;
+    border-radius:var(--radius);
+    border-top:4px solid var(--brass);
+  }
+  .faculty-card .role{
+    font-family:'Space Mono',monospace;
+    font-size:0.7rem;
+    letter-spacing:0.12em;
+    text-transform:uppercase;
+    color:var(--brass);
+    display:block;
+    margin-bottom:8px;
+  }
+  .faculty-card h4{
+    font-family:'Rye',serif;
+    font-size:1.3rem;
+    margin:0 0 8px;
+  }
+  .faculty-card p{
+    font-size:0.87rem;
+    color:#c9d0c1;
+    margin:0;
+  }
+
+  /* Rules */
+  .rules{
+    background:var(--paper);
+    border-top:2px solid var(--ink);
+    border-bottom:2px solid var(--ink);
+  }
+  .rules .wrap{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+    gap:36px;
+    padding:56px 0;
+  }
+  .rule{padding-left:18px; border-left:3px solid var(--red-pen);}
+  .rule .tag{font-family:'Space Mono',monospace; font-size:0.7rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--red-pen);}
+  .rule h4{font-family:'Rye',serif; font-size:1.05rem; margin:8px 0 6px;}
+  .rule p{font-size:0.85rem; color:#4a4a40; margin:0;}
+
+  footer{
+    background:var(--board-2);
+    color:#8c9385;
+    padding:36px 6vw;
+    font-family:'Space Mono',monospace;
+    font-size:0.75rem;
+    display:flex;
+    justify-content:space-between;
+    flex-wrap:wrap;
+    gap:12px;
+  }
+  footer strong{color:var(--brass);}
+
+  @media (max-width:820px){
+    .hero{grid-template-columns:1fr;}
+    .section-head{flex-direction:column; align-items:flex-start;}
+    nav ul{gap:16px; font-size:0.75rem;}
+  }
+</style>
+</head>
+<body>
+
+<div class="ribbon">OPENING SOON · CW CODE: yeephighschool · FACULTY CONFIRMED</div>
+
+<header>
+  <nav>
+    <a href="index.html" class="brand">yeepshighschool</a>
+    <ul>
+      <li><a href="#courses">Courses</a></li>
+      <li><a href="#faculty">Faculty</a></li>
+      <li><a href="#rules">Handbook</a></li>
+      <li><a href="apply.html">Apply to Teach</a></li>
+      <li><a href="https://discord.gg/A3SYRf37Yf" target="_blank" rel="noopener">Discord</a></li>
+    </ul>
+  </nav>
+
+  <div class="hero">
+    <div>
+      <div class="hero-eyebrow">A Destroy Games VR World</div>
+      <h1 class="hero-title">yeepshighschool</h1>
+      <p class="sub">A real classroom world inside Yeeps VR — teachers run live periods for total beginners and seasoned pros alike.</p>
+      <div class="cta-row">
+        <a href="apply.html" class="btn btn-primary">Apply to Teach</a>
+        <a href="https://discord.gg/A3SYRf37Yf" target="_blank" rel="noopener" class="btn btn-ghost">Join Discord</a>
+      </div>
+    </div>
+
+    <div class="schedule-card">
+      <h3>School Info</h3>
+      <p style="color:#cfd6c9; font-size:0.9rem; margin:0 0 10px;"><strong>CW Portal Code:</strong> yeephighschool</p>
+      <p style="color:#cfd6c9; font-size:0.9rem; margin:0;"><strong>Office Hours:</strong> Daily, 6P–11P EST</p>
+    </div>
+  </div>
+</header>
+
+<section id="courses">
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <span class="num">01 — Curriculum</span>
+        <h2 class="section-title">Available Classes</h2>
+      </div>
+    </div>
+
+    <div class="courses">
+      <div class="course">
+        <span class="period-tag">Class</span>
+        <h4>Wiring Class</h4>
+        <p>Circuits, wiring logic, and how to make things work in-world.</p>
+      </div>
+      <div class="course">
+        <span class="period-tag">Class</span>
+        <h4>Math Class</h4>
+        <p>Everyday math taught directly inside the VR environment.</p>
+      </div>
+      <div class="course">
+        <span class="period-tag">Class</span>
+        <h4>Flying Class</h4>
+        <p>Flight mechanics and controls for smooth movement.</p>
+      </div>
+      <div class="course">
+        <span class="period-tag">Class</span>
+        <h4>Building Class</h4>
+        <p>Map and structure building basics for new creators.</p>
+      </div>
+      <div class="course">
+        <span class="period-tag">Class</span>
+        <h4>Gym Class</h4>
+        <p>Movement drills, physical movement tactics, and movement challenges.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="rules" id="rules">
+  <div class="wrap">
+    <div class="rule">
+      <span class="tag">Rule 01</span>
+      <h4>Portals Stay Marked</h4>
+      <p>Every classroom needs a visible sign at the entrance.</p>
+    </div>
+    <div class="rule">
+      <span class="tag">Rule 02</span>
+      <h4>Teacher Accountability</h4>
+      <p>If you bring on a co-teacher, you are responsible for how they run their period.</p>
+    </div>
+    <div class="rule">
+      <span class="tag">Rule 03</span>
+      <h4>Be Welcoming</h4>
+      <p>New players get patience first, corrections second.</p>
+    </div>
+  </div>
+</section>
+
+<section id="faculty">
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <span class="num">02 — Staff Directory</span>
+        <h2 class="section-title">Faculty</h2>
+      </div>
+    </div>
+
+    <div class="faculty">
+      <div class="faculty-card">
+        <span class="role">Principal</span>
+        <h4>CamManOfficial</h4>
+        <p>Founder &amp; director, Destroy Games VR.</p>
+      </div>
+      <div class="faculty-card">
+        <span class="role">Gym Teacher</span>
+        <h4>Mr. Goni</h4>
+        <p>Leads physical movement, parkour, and fitness drills.</p>
+      </div>
+      <div class="faculty-card">
+        <span class="role">Teacher</span>
+        <h4>Mr. Purplefrog</h4>
+        <p>On faculty, period and subject TBA.</p>
+      </div>
+      <div class="faculty-card">
+        <span class="role">Teacher</span>
+        <h4>Mr. Redbobo</h4>
+        <p>On faculty, period and subject TBA.</p>
+      </div>
+      <div class="faculty-card">
+        <span class="role">Teacher</span>
+        <h4>Mr. Hawksum</h4>
+        <p>On faculty, period and subject TBA.</p>
+      </div>
+      <div class="faculty-card">
+        <span class="role">Teacher</span>
+        <h4>Mr. Monkeyisbig</h4>
+        <p>On faculty, period and subject TBA.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div><strong>yeepshighschool</strong> — Destroy Games VR</div>
+  <div>Built for Yeeps VR · Meta Quest</div>
+</footer>
+
+</body>
+</html>
