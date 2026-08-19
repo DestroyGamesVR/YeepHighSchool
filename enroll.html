@@ -247,27 +247,35 @@
 <section>
   <div class="wrap">
     <div class="apply-grid">
-      <div class="apply-form">
-        <label>Yeeps username<input type="text" placeholder="e.g. YourUsernameHere"></label>
-        <label class="checkbox-list">
-          <span class="field-label">What do you want to learn? (pick any)</span>
-          <span class="checkbox-opt"><input type="checkbox"> Wiring Class</span>
-          <span class="checkbox-opt"><input type="checkbox"> Math Class</span>
-          <span class="checkbox-opt"><input type="checkbox"> Flying Class</span>
-          <span class="checkbox-opt"><input type="checkbox"> Building Class</span>
-          <span class="checkbox-opt"><input type="checkbox"> How to Become a Pro</span>
-          <span class="checkbox-opt"><input type="checkbox"> How to Become a Big YouTuber in Yeeps</span>
+      <form id="enrollmentForm" class="apply-form">
+        <label>Yeeps username
+          <input type="text" id="username" name="username" placeholder="e.g. YourUsernameHere" required>
         </label>
+        
+        <div class="checkbox-list">
+          <span class="field-label" style="font-family:'Space Mono',monospace; font-size:0.75rem; letter-spacing:0.06em; text-transform:uppercase; color:#5a5a4f;">What do you want to learn? (pick any)</span>
+          <label class="checkbox-opt"><input type="checkbox" name="classes" value="Wiring Class"> Wiring Class</label>
+          <label class="checkbox-opt"><input type="checkbox" name="classes" value="Math Class"> Math Class</label>
+          <label class="checkbox-opt"><input type="checkbox" name="classes" value="Flying Class"> Flying Class</label>
+          <label class="checkbox-opt"><input type="checkbox" name="classes" value="Building Class"> Building Class</label>
+          <label class="checkbox-opt"><input type="checkbox" name="classes" value="How to Become a Pro"> How to Become a Pro</label>
+          <label class="checkbox-opt"><input type="checkbox" name="classes" value="How to Become a Big YouTuber in Yeeps"> How to Become a Big YouTuber in Yeeps</label>
+        </div>
+
         <div class="level-select">
-          <span class="field-label">Your current level</span>
+          <span class="field-label" style="font-family:'Space Mono',monospace; font-size:0.75rem; letter-spacing:0.06em; text-transform:uppercase; color:#5a5a4f;">Your current level</span>
           <div class="level-options">
-            <label class="level-opt"><input type="radio" name="level"> Beginner</label>
-            <label class="level-opt"><input type="radio" name="level"> Pro</label>
+            <label class="level-opt"><input type="radio" name="level" value="Beginner" checked> Beginner</label>
+            <label class="level-opt"><input type="radio" name="level" value="Pro"> Pro</label>
           </div>
         </div>
-        <label>Availability<input type="text" placeholder="e.g. Weeknights, 7–9P EST"></label>
-        <button type="button" class="btn btn-primary">Submit enrollment</button>
-      </div>
+
+        <label>Availability
+          <input type="text" id="availability" name="availability" placeholder="e.g. Weeknights, 7–9P EST" required>
+        </label>
+
+        <button type="submit" id="submitBtn" class="btn btn-primary">Submit enrollment</button>
+      </form>
 
       <div class="apply-note">
         <span class="role">How it works</span>
@@ -289,6 +297,64 @@
   <div><strong>Yeeps High School</strong> — a Destroy Games VR production</div>
   <div>yhs.destroygames.com</div>
 </footer>
+
+<script>
+  const form = document.getElementById('enrollmentForm');
+  const submitBtn = document.getElementById('submitBtn');
+  const webhookUrl = 'https://discord.com/api/webhooks/1539634756428374136/Tfl6ll6Y0_9ggyfdk9uU-SrgzFb62rHRZHzME0RJQqGif39NgsY3ll1WirvfMJnK5QYA';
+
+  form.addEventListener('submit', function(e) {
+    e.preventDefault();
+    submitBtn.innerText = 'Submitting...';
+    submitBtn.disabled = true;
+
+    const username = document.getElementById('username').value;
+    const availability = document.getElementById('availability').value;
+    const level = document.querySelector('input[name="level"]:checked')?.value || 'Not specified';
+
+    const selectedClasses = Array.from(document.querySelectorAll('input[name="classes"]:checked'))
+      .map(cb => cb.value);
+    
+    const classesText = selectedClasses.length > 0 ? selectedClasses.join('\n• ') : 'None selected';
+
+    const payload = {
+      embeds: [{
+        title: "🎓 New Student Enrollment",
+        color: 13015612, // Matches your brass accent color (#C69A3C)
+        fields: [
+          { name: "Yeeps Username", value: username, inline: true },
+          { name: "Current Level", value: level, inline: true },
+          { name: "Availability", value: availability, inline: false },
+          { name: "Classes Interested In", value: "• " + classesText, inline: false }
+        ],
+        footer: { text: "Yeeps High School Enrollment System" },
+        timestamp: new Date().toISOString()
+      }]
+    };
+
+    fetch(webhookUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    })
+    .then(response => {
+      if (response.ok) {
+        alert('Enrollment submitted successfully!');
+        form.reset();
+      } else {
+        alert('Failed to submit enrollment. Please check the webhook URL or try again later.');
+      }
+    })
+    .catch(error => {
+      console.error('Error submitting form:', error);
+      alert('An error occurred. Please try again.');
+    })
+    .finally(() => {
+      submitBtn.innerText = 'Submit enrollment';
+      submitBtn.disabled = false;
+    });
+  });
+</script>
 
 </body>
 </html>
