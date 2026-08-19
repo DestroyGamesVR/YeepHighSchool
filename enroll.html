@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Enroll — Yeeps High School</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Rye&family=Space+Mono:wght@400;700&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --board:#22352a;
+    --board-2:#1a2a21;
+    --chalk:#eef0e6;
+    --paper:#e9e2cd;
+    --ink:#1c2420;
+    --brass:#c69a3c;
+    --red-pen:#a4372c;
+    --line:rgba(238,240,230,0.18);
+    --radius:2px;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Work Sans',sans-serif;
+    line-height:1.5;
+  }
+  a{color:inherit;}
+
+  .ribbon{
+    background:var(--ink);
+    color:var(--paper);
+    text-align:center;
+    font-family:'Space Mono',monospace;
+    font-size:0.72rem;
+    letter-spacing:0.12em;
+    text-transform:uppercase;
+    padding:7px 10px;
+  }
+
+  header{
+    background:
+      radial-gradient(ellipse at 20% 20%, rgba(255,255,255,0.03), transparent 40%),
+      linear-gradient(180deg, var(--board) 0%, var(--board-2) 100%);
+    color:var(--chalk);
+    padding:48px 6vw 60px;
+    border-bottom:10px solid var(--brass);
+  }
+  nav{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    max-width:1180px;
+    margin:0 auto 44px;
+    font-family:'Space Mono',monospace;
+    font-size:0.85rem;
+  }
+  nav .brand{font-family:'Rye',serif; font-size:1.1rem; color:var(--brass); text-decoration:none;}
+  nav a.back{text-decoration:none; opacity:0.85; border-bottom:1px dashed transparent; padding-bottom:2px;}
+  nav a.back:hover{opacity:1; border-color:var(--brass);}
+
+  .hero-wrap{max-width:1180px; margin:0 auto;}
+  .hero-eyebrow{
+    font-family:'Space Mono',monospace;
+    font-size:0.75rem;
+    letter-spacing:0.18em;
+    text-transform:uppercase;
+    color:var(--brass);
+    margin-bottom:16px;
+  }
+  h1{
+    font-family:'Rye',serif;
+    font-size:clamp(2.2rem,4.6vw,3.6rem);
+    line-height:1.05;
+    margin:0 0 18px;
+  }
+  header p.sub{
+    max-width:56ch;
+    color:#cfd6c9;
+    font-size:1.05rem;
+    margin:0;
+  }
+
+  section{padding:64px 6vw;}
+  .wrap{max-width:1000px; margin:0 auto;}
+
+  .apply-grid{
+    display:grid;
+    grid-template-columns:1.3fr 1fr;
+    gap:40px;
+    align-items:start;
+  }
+  .apply-form{
+    background:var(--paper);
+    border:2px solid var(--ink);
+    padding:36px;
+    display:flex;
+    flex-direction:column;
+    gap:20px;
+  }
+  .apply-form label{
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+    font-family:'Space Mono',monospace;
+    font-size:0.75rem;
+    letter-spacing:0.06em;
+    text-transform:uppercase;
+    color:#5a5a4f;
+  }
+  .apply-form input[type="text"],
+  .apply-form textarea{
+    font-family:'Work Sans',sans-serif;
+    font-size:0.95rem;
+    text-transform:none;
+    letter-spacing:normal;
+    padding:12px 13px;
+    border:1px solid #b9b096;
+    background:#fff;
+    color:var(--ink);
+    border-radius:var(--radius);
+    resize:vertical;
+  }
+  .apply-form input[type="text"]:focus,
+  .apply-form textarea:focus{
+    outline:2px solid var(--brass);
+    outline-offset:1px;
+  }
+  .field-label{display:block; margin-bottom:8px;}
+  .level-options{display:flex; gap:18px; flex-wrap:wrap;}
+  .level-opt{
+    flex-direction:row !important;
+    align-items:center;
+    gap:6px !important;
+    text-transform:none;
+    font-family:'Work Sans',sans-serif;
+    font-size:0.9rem;
+    color:var(--ink);
+  }
+  .checkbox-list{display:flex; flex-direction:column; gap:10px;}
+  .checkbox-opt{
+    flex-direction:row !important;
+    align-items:center;
+    gap:8px !important;
+    text-transform:none;
+    font-family:'Work Sans',sans-serif;
+    font-size:0.9rem;
+    color:var(--ink);
+  }
+  .btn{
+    font-family:'Space Mono',monospace;
+    font-size:0.85rem;
+    letter-spacing:0.03em;
+    padding:14px 22px;
+    border-radius:var(--radius);
+    border:none;
+    cursor:pointer;
+  }
+  .btn-primary{background:var(--brass); color:var(--board-2); font-weight:700;}
+
+  .apply-note{
+    background:var(--board);
+    color:var(--chalk);
+    padding:30px 28px;
+    border-radius:var(--radius);
+    border-top:4px solid var(--brass);
+  }
+  .apply-note .role{
+    font-family:'Space Mono',monospace;
+    font-size:0.7rem;
+    letter-spacing:0.12em;
+    text-transform:uppercase;
+    color:var(--brass);
+    display:block;
+    margin-bottom:16px;
+  }
+  .steps{list-style:none; margin:0; padding:0; counter-reset:step;}
+  .steps li{
+    counter-increment:step;
+    display:flex;
+    gap:14px;
+    padding:12px 0;
+    border-bottom:1px solid rgba(238,240,230,0.15);
+    font-size:0.88rem;
+    color:#dde3d6;
+  }
+  .steps li:last-child{border-bottom:none;}
+  .steps li::before{
+    content:counter(step);
+    font-family:'Space Mono',monospace;
+    color:var(--brass);
+    font-weight:700;
+    flex-shrink:0;
+  }
+  .apply-note .code-line{
+    margin-top:22px;
+    padding-top:18px;
+    border-top:1px dashed var(--line);
+    font-family:'Space Mono',monospace;
+    font-size:0.78rem;
+  }
+  .apply-note .code-line .label{
+    display:block;
+    color:var(--brass);
+    letter-spacing:0.1em;
+    text-transform:uppercase;
+    font-size:0.68rem;
+    margin-bottom:6px;
+  }
+
+  footer{
+    background:var(--board-2);
+    color:#8c9385;
+    padding:32px 6vw;
+    font-family:'Space Mono',monospace;
+    font-size:0.75rem;
+    display:flex;
+    justify-content:space-between;
+    flex-wrap:wrap;
+    gap:12px;
+  }
+  footer strong{color:var(--brass);}
+
+  @media (max-width:820px){
+    .apply-grid{grid-template-columns:1fr;}
+  }
+</style>
+</head>
+<body>
+
+<div class="ribbon">OPENING SOON · CW CODE: yeephighschool · FACULTY CONFIRMED</div>
+
+<header>
+  <nav>
+    <a href="index.html" class="brand">YEEPS HIGH</a>
+    <a href="index.html" class="back">← Back to school</a>
+  </nav>
+  <div class="hero-wrap">
+    <div class="hero-eyebrow">Student Enrollment</div>
+    <h1>Enroll as a Student</h1>
+    <p class="sub">No experience required. Pick what you want to learn — wiring, math, flying, building, and more — and get vouched in.</p>
+  </div>
+</header>
+
+<section>
+  <div class="wrap">
+    <div class="apply-grid">
+      <div class="apply-form">
+        <label>Yeeps username<input type="text" placeholder="e.g. YourUsernameHere"></label>
+        <label class="checkbox-list">
+          <span class="field-label">What do you want to learn? (pick any)</span>
+          <span class="checkbox-opt"><input type="checkbox"> Wiring Class</span>
+          <span class="checkbox-opt"><input type="checkbox"> Math Class</span>
+          <span class="checkbox-opt"><input type="checkbox"> Flying Class</span>
+          <span class="checkbox-opt"><input type="checkbox"> Building Class</span>
+          <span class="checkbox-opt"><input type="checkbox"> How to Become a Pro</span>
+          <span class="checkbox-opt"><input type="checkbox"> How to Become a Big YouTuber in Yeeps</span>
+        </label>
+        <div class="level-select">
+          <span class="field-label">Your current level</span>
+          <div class="level-options">
+            <label class="level-opt"><input type="radio" name="level"> Beginner</label>
+            <label class="level-opt"><input type="radio" name="level"> Pro</label>
+          </div>
+        </div>
+        <label>Availability<input type="text" placeholder="e.g. Weeknights, 7–9P EST"></label>
+        <button type="button" class="btn btn-primary">Submit enrollment</button>
+      </div>
+
+      <div class="apply-note">
+        <span class="role">How it works</span>
+        <ul class="steps">
+          <li>Submit your enrollment with what you want to learn.</li>
+          <li>Get vouched in and shown the portal.</li>
+          <li>Show up to class — no paperwork, just a headset.</li>
+        </ul>
+        <div class="code-line">
+          <span class="label">World Portal · CW Code</span>
+          yeephighschool
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div><strong>Yeeps High School</strong> — a Destroy Games VR production</div>
+  <div>yhs.destroygames.com</div>
+</footer>
+
+</body>
+</html>

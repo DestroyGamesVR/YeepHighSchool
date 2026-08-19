@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Yeeps High School</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Rye&family=Space+Mono:wght@400;700&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --board:#22352a;
+    --board-2:#1a2a21;
+    --chalk:#eef0e6;
+    --paper:#e9e2cd;
+    --ink:#1c2420;
+    --brass:#c69a3c;
+    --red-pen:#a4372c;
+    --line:rgba(238,240,230,0.18);
+    --radius:2px;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Work Sans',sans-serif;
+    line-height:1.5;
+  }
+  .display{font-family:'Rye',serif;}
+  .mono{font-family:'Space Mono',monospace;}
+
+  a{color:inherit;}
+
+  /* ---------- top ribbon ---------- */
+  .ribbon{
+    background:var(--ink);
+    color:var(--paper);
+    text-align:center;
+    font-family:'Space Mono',monospace;
+    font-size:0.72rem;
+    letter-spacing:0.12em;
+    text-transform:uppercase;
+    padding:7px 10px;
+  }
+
+  /* ---------- header / chalkboard hero ---------- */
+  header{
+    background:
+      radial-gradient(ellipse at 20% 20%, rgba(255,255,255,0.03), transparent 40%),
+      linear-gradient(180deg, var(--board) 0%, var(--board-2) 100%);
+    color:var(--chalk);
+    padding:64px 6vw 48px;
+    position:relative;
+    border-bottom:10px solid var(--brass);
+  }
+  nav{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    max-width:1180px;
+    margin:0 auto 56px;
+    font-family:'Space Mono',monospace;
+    font-size:0.85rem;
+    letter-spacing:0.03em;
+  }
+  nav .brand{
+    font-family:'Rye',serif;
+    font-size:1.1rem;
+    color:var(--brass);
+  }
+  nav ul{
+    list-style:none;
+    display:flex;
+    gap:28px;
+    margin:0;
+    padding:0;
+  }
+  nav a{text-decoration:none; opacity:0.85; border-bottom:1px dashed transparent; padding-bottom:2px;}
+  nav a:hover{opacity:1; border-color:var(--brass);}
+
+  .hero{
+    max-width:1180px;
+    margin:0 auto;
+    display:grid;
+    grid-template-columns:1.15fr 0.85fr;
+    gap:48px;
+    align-items:end;
+  }
+  .hero-eyebrow{
+    font-family:'Space Mono',monospace;
+    font-size:0.75rem;
+    letter-spacing:0.18em;
+    text-transform:uppercase;
+    color:var(--brass);
+    margin-bottom:18px;
+  }
+  h1.hero-title{
+    font-family:'Rye',serif;
+    font-size:clamp(2.6rem,5.4vw,4.6rem);
+    line-height:1.02;
+    margin:0 0 22px;
+    text-shadow:0 2px 0 rgba(0,0,0,0.35);
+  }
+  .hero p.sub{
+    max-width:46ch;
+    color:#cfd6c9;
+    font-size:1.05rem;
+    margin:0 0 30px;
+  }
+  .chalk-underline{
+    display:inline-block;
+    position:relative;
+  }
+  .chalk-underline svg{position:absolute; left:0; bottom:-10px; width:100%; height:12px;}
+
+  .cta-row{display:flex; gap:14px; flex-wrap:wrap;}
+  .btn{
+    font-family:'Space Mono',monospace;
+    font-size:0.85rem;
+    letter-spacing:0.03em;
+    text-decoration:none;
+    padding:13px 22px;
+    border-radius:var(--radius);
+    display:inline-block;
+    border:1px solid transparent;
+    transition:transform .15s ease;
+  }
+  .btn:hover{transform:translateY(-2px);}
+  .btn-primary{background:var(--brass); color:var(--board-2); font-weight:700;}
+  .btn-ghost{border-color:var(--line); color:var(--chalk);}
+
+  /* bell schedule card */
+  .schedule-card{
+    background:rgba(238,240,230,0.05);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    padding:22px 24px;
+  }
+  .schedule-card h3{
+    font-family:'Space Mono',monospace;
+    font-size:0.78rem;
+    letter-spacing:0.14em;
+    text-transform:uppercase;
+    color:var(--brass);
+    margin:0 0 14px;
+  }
+  .period{
+    display:flex;
+    justify-content:space-between;
+    font-family:'Space Mono',monospace;
+    font-size:0.85rem;
+    padding:9px 0;
+    border-bottom:1px dashed var(--line);
+    color:#dde3d6;
+  }
+  .period:last-child{border-bottom:none;}
+  .period span:first-child{color:var(--chalk); font-weight:700;}
+
+  /* ---------- sections ---------- */
+  section{padding:88px 6vw;}
+  .wrap{max-width:1180px; margin:0 auto;}
+  .section-head{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-end;
+    gap:24px;
+    margin-bottom:44px;
+    border-bottom:2px solid var(--ink);
+    padding-bottom:18px;
+  }
+  .section-head .num{
+    font-family:'Space Mono',monospace;
+    font-size:0.78rem;
+    letter-spacing:0.14em;
+    text-transform:uppercase;
+    color:var(--red-pen);
+  }
+  h2.section-title{
+    font-family:'Rye',serif;
+    font-size:clamp(1.8rem,3.4vw,2.6rem);
+    margin:6px 0 0;
+  }
+  .section-note{
+    font-family:'Space Mono',monospace;
+    font-size:0.8rem;
+    max-width:32ch;
+    color:#5a5a4f;
+    text-align:right;
+  }
+
+  /* courses grid */
+  .courses{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+    gap:2px;
+    background:var(--ink);
+    border:2px solid var(--ink);
+  }
+  .course{
+    background:var(--paper);
+    padding:26px 24px 24px;
+    position:relative;
+  }
+  .course .period-tag{
+    font-family:'Space Mono',monospace;
+    font-size:0.7rem;
+    letter-spacing:0.1em;
+    text-transform:uppercase;
+    color:var(--red-pen);
+    display:inline-block;
+    margin-bottom:10px;
+  }
+  .course .level{
+    font-family:'Space Mono',monospace;
+    font-size:0.65rem;
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    padding:2px 8px;
+    border-radius:2px;
+    display:inline-block;
+    margin:0 0 10px 8px;
+    vertical-align:middle;
+  }
+  .level-beginner{background:rgba(43,59,47,0.1); border:1px solid var(--board); color:var(--board);}
+  .level-pro{background:var(--brass); color:var(--board-2);}
+  .level-all{background:transparent; border:1px solid #b9b096; color:#5a5a4f;}
+  .course h4{
+    font-family:'Rye',serif;
+    font-size:1.28rem;
+    margin:0 0 10px;
+  }
+  .course p{
+    font-size:0.9rem;
+    color:#4a4a40;
+    margin:0 0 14px;
+  }
+  .course .teacher{
+    font-family:'Space Mono',monospace;
+    font-size:0.75rem;
+    color:var(--ink);
+    border-top:1px dashed #b9b096;
+    padding-top:10px;
+  }
+  .seat-open{
+    display:inline-block;
+    margin-top:10px;
+    font-family:'Space Mono',monospace;
+    font-size:0.68rem;
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    background:var(--red-pen);
+    color:var(--paper);
+    padding:3px 8px;
+    border-radius:2px;
+  }
+
+  /* faculty */
+  .faculty{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+    gap:26px;
+  }
+  .faculty-card{
+    background:var(--board);
+    color:var(--chalk);
+    padding:26px 22px;
+    border-radius:var(--radius);
+    border-top:4px solid var(--brass);
+  }
+  .faculty-card .role{
+    font-family:'Space Mono',monospace;
+    font-size:0.7rem;
+    letter-spacing:0.12em;
+    text-transform:uppercase;
+    color:var(--brass);
+    display:block;
+    margin-bottom:8px;
+  }
+  .faculty-card h4{
+    font-family:'Rye',serif;
+    font-size:1.3rem;
+    margin:0 0 8px;
+  }
+  .faculty-card p{
+    font-size:0.87rem;
+    color:#c9d0c1;
+    margin:0;
+  }
+  .faculty-card.open{
+    background:transparent;
+    border:2px dashed #b9b096;
+    color:var(--ink);
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:flex-start;
+  }
+  .faculty-card.open .role{color:var(--red-pen);}
+  .faculty-card.open p{color:#5a5a4f;}
+
+  /* teacher applications */
+  .apply-grid{
+    display:grid;
+    grid-template-columns:1.3fr 1fr;
+    gap:40px;
+    align-items:start;
+  }
+  .apply-form{
+    background:var(--paper);
+    border:2px solid var(--ink);
+    padding:32px;
+    display:flex;
+    flex-direction:column;
+    gap:18px;
+  }
+  .apply-form label{
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+    font-family:'Space Mono',monospace;
+    font-size:0.75rem;
+    letter-spacing:0.06em;
+    text-transform:uppercase;
+    color:#5a5a4f;
+  }
+  .apply-form input[type="text"],
+  .apply-form textarea{
+    font-family:'Work Sans',sans-serif;
+    font-size:0.95rem;
+    text-transform:none;
+    letter-spacing:normal;
+    padding:11px 12px;
+    border:1px solid #b9b096;
+    background:#fff;
+    color:var(--ink);
+    border-radius:var(--radius);
+    resize:vertical;
+  }
+  .apply-form input[type="text"]:focus,
+  .apply-form textarea:focus{
+    outline:2px solid var(--brass);
+    outline-offset:1px;
+  }
+  .field-label{display:block; margin-bottom:8px;}
+  .level-options{
+    display:flex;
+    gap:18px;
+    flex-wrap:wrap;
+  }
+  .level-opt{
+    flex-direction:row !important;
+    align-items:center;
+    gap:6px !important;
+    text-transform:none;
+    font-family:'Work Sans',sans-serif;
+    font-size:0.88rem;
+    color:var(--ink);
+  }
+  .apply-note{
+    background:var(--board);
+    color:var(--chalk);
+    padding:28px 26px;
+    border-radius:var(--radius);
+    border-top:4px solid var(--brass);
+  }
+  .apply-note .role{
+    font-family:'Space Mono',monospace;
+    font-size:0.7rem;
+    letter-spacing:0.12em;
+    text-transform:uppercase;
+    color:var(--brass);
+    display:block;
+    margin-bottom:14px;
+  }
+  .apply-note .steps li{border-color:rgba(238,240,230,0.15); color:#dde3d6; font-size:0.88rem;}
+
+  .cs-tag{
+    display:inline-block;
+    font-family:'Space Mono',monospace;
+    font-size:0.68rem;
+    letter-spacing:0.1em;
+    text-transform:uppercase;
+    background:var(--red-pen);
+    color:var(--paper);
+    padding:3px 9px;
+    border-radius:2px;
+    margin-bottom:10px;
+  }
+  .schedule-card .coming-soon p{
+    font-size:0.85rem;
+    color:#c9d0c1;
+    margin:0;
+  }
+  .courses-empty{
+    border:2px dashed var(--ink);
+    padding:56px 40px;
+    text-align:center;
+  }
+  .courses-empty h3{
+    font-family:'Rye',serif;
+    font-size:1.6rem;
+    margin:0 0 12px;
+  }
+  .courses-empty p{
+    max-width:44ch;
+    margin:0 auto 24px;
+    color:#4a4a40;
+    font-size:0.92rem;
+  }
+
+  /* how to join */
+  .join{
+    background:var(--ink);
+    color:var(--paper);
+    border-radius:var(--radius);
+    padding:56px 6vw;
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:48px;
+  }
+  .join h2{
+    font-family:'Rye',serif;
+    font-size:clamp(1.7rem,3vw,2.3rem);
+    margin:0 0 16px;
+  }
+  .join p{color:#cfd6c9; margin:0 0 24px; max-width:42ch;}
+  .steps{list-style:none; margin:0; padding:0; counter-reset:step;}
+  .steps li{
+    counter-increment:step;
+    display:flex;
+    gap:16px;
+    padding:14px 0;
+    border-bottom:1px solid rgba(233,226,205,0.15);
+    font-size:0.92rem;
+  }
+  .steps li:last-child{border-bottom:none;}
+  .steps li::before{
+    content:counter(step);
+    font-family:'Space Mono',monospace;
+    color:var(--brass);
+    font-weight:700;
+    flex-shrink:0;
+  }
+  .portal-code{
+    font-family:'Space Mono',monospace;
+    background:rgba(238,240,230,0.06);
+    border:1px dashed var(--line);
+    padding:20px;
+    border-radius:var(--radius);
+  }
+  .portal-code .label{font-size:0.7rem; letter-spacing:0.12em; text-transform:uppercase; color:var(--brass); display:block; margin-bottom:8px;}
+  .portal-code .code{font-size:1.3rem; letter-spacing:0.06em;}
+
+  /* rules strip */
+  .rules{
+    background:var(--paper);
+    border-top:2px solid var(--ink);
+    border-bottom:2px solid var(--ink);
+  }
+  .rules .wrap{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+    gap:36px;
+    padding:56px 0;
+  }
+  .rule{padding-left:18px; border-left:3px solid var(--red-pen);}
+  .rule .tag{font-family:'Space Mono',monospace; font-size:0.7rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--red-pen);}
+  .rule h4{font-family:'Rye',serif; font-size:1.05rem; margin:8px 0 6px;}
+  .rule p{font-size:0.85rem; color:#4a4a40; margin:0;}
+
+  footer{
+    background:var(--board-2);
+    color:#8c9385;
+    padding:36px 6vw;
+    font-family:'Space Mono',monospace;
+    font-size:0.75rem;
+    display:flex;
+    justify-content:space-between;
+    flex-wrap:wrap;
+    gap:12px;
+  }
+  footer strong{color:var(--brass);}
+
+  @media (max-width:820px){
+    .hero{grid-template-columns:1fr;}
+    .join{grid-template-columns:1fr;}
+    .apply-grid{grid-template-columns:1fr;}
+    .section-head{flex-direction:column; align-items:flex-start;}
+    .section-note{text-align:left;}
+    nav ul{gap:16px; font-size:0.75rem;}
+  }
+</style>
+</head>
+<body>
+
+<div class="ribbon">OPENING SOON · CW CODE: yeephighschool · FACULTY CONFIRMED</div>
+
+<header>
+  <nav>
+    <div class="brand">YEEPS HIGH</div>
+    <ul>
+      <li><a href="#courses">Courses</a></li>
+      <li><a href="#faculty">Faculty</a></li>
+      <li><a href="apply-to-teach.html">Apply to Teach</a></li>
+      <li><a href="#join">Enroll</a></li>
+      <li><a href="#rules">Handbook</a></li>
+    </ul>
+  </nav>
+
+  <div class="hero">
+    <div>
+      <div class="hero-eyebrow">A Destroy Games VR World · yhs.destroygames.com</div>
+      <h1 class="hero-title">Yeeps High<br>School</h1>
+      <p class="sub">A real classroom world inside Yeeps VR — teachers run live periods for total beginners and seasoned pros alike. Bring a headset and a topic; the chalkboard's yours.</p>
+      <div class="cta-row">
+        <a href="#join" class="btn btn-primary">Get the portal code</a>
+        <a href="apply-to-teach.html" class="btn btn-ghost">Apply to teach</a>
+      </div>
+    </div>
+
+    <div class="schedule-card">
+      <h3>Today's Bell Schedule</h3>
+      <div class="coming-soon">
+        <span class="cs-tag">Opening Soon</span>
+        <p>Teachers are locked in — the bell schedule goes up when we open the doors.</p>
+      </div>
+    </div>
+  </div>
+</header>
+
+<section id="courses">
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <span class="num">01 — Class Schedule</span>
+        <h2 class="section-title">Today's Periods</h2>
+      </div>
+      <p class="section-note">Open to any teacher — claim a class below.</p>
+    </div>
+
+    <div class="courses">
+      <div class="course">
+        <span class="period-tag">Class</span>
+        <span class="level level-all">All Levels</span>
+        <h4>Wiring Class</h4>
+        <p>Circuits, wiring logic, and how to make stuff actually work in-world.</p>
+        <div class="teacher">Taught by: Open slot</div>
+        <span class="seat-open">Needs a teacher</span>
+      </div>
+
+      <div class="course">
+        <span class="period-tag">Class</span>
+        <span class="level level-all">All Levels</span>
+        <h4>Math Class</h4>
+        <p>Everyday math, no VR trick required — just a teacher willing to run it.</p>
+        <div class="teacher">Taught by: Open slot</div>
+        <span class="seat-open">Needs a teacher</span>
+      </div>
+
+      <div class="course">
+        <span class="period-tag">Class</span>
+        <span class="level level-all">All Levels</span>
+        <h4>Flying Class</h4>
+        <p>Flight mechanics and controls for anyone who wants to leave the ground.</p>
+        <div class="teacher">Taught by: Open slot</div>
+        <span class="seat-open">Needs a teacher</span>
+      </div>
+
+      <div class="course">
+        <span class="period-tag">Class</span>
+        <span class="level level-all">All Levels</span>
+        <h4>Building Class</h4>
+        <p>Map and structure building basics for anyone putting together their first build.</p>
+        <div class="teacher">Taught by: Open slot</div>
+        <span class="seat-open">Needs a teacher</span>
+      </div>
+
+      <div class="course">
+        <span class="period-tag">Class</span>
+        <span class="level level-pro">Pro</span>
+        <h4>How to Become a Pro</h4>
+        <p>Tips, tricks, and habits for leveling up from casual to pro.</p>
+        <div class="teacher">Taught by: Open slot</div>
+        <span class="seat-open">Needs a teacher</span>
+      </div>
+
+      <div class="course">
+        <span class="period-tag">Class</span>
+        <span class="level level-all">All Levels</span>
+        <h4>How to Become a Big YouTuber in Yeeps</h4>
+        <p>Growing a channel around Yeeps content — clips, uploads, and building an audience.</p>
+        <div class="teacher">Taught by: Open slot</div>
+        <span class="seat-open">Needs a teacher</span>
+      </div>
+    </div>
+
+    <div class="courses-empty" style="margin-top:2px;">
+      <span class="cs-tag">Any Subject Welcome</span>
+      <h3>Got something else to teach?</h3>
+      <p>These three are just the start — any teacher can sign up to run their own class.</p>
+      <a href="apply-to-teach.html" class="btn btn-primary">Apply to teach</a>
+    </div>
+  </div>
+</section>
+
+
+<section class="rules" id="rules">
+  <div class="wrap">
+    <div class="rule">
+      <span class="tag">Rule 01</span>
+      <h4>Portals stay marked</h4>
+      <p>Every classroom needs a visible sign at the entrance per DG world standards.</p>
+    </div>
+    <div class="rule">
+      <span class="tag">Rule 02</span>
+      <h4>Teachers vouch for staff</h4>
+      <p>If you bring on a co-teacher, you're accountable for how they run their period.</p>
+    </div>
+    <div class="rule">
+      <span class="tag">Rule 03</span>
+      <h4>No period without a sub plan</h4>
+      <p>Can't make it? Post in the staff channel so a period doesn't sit empty.</p>
+    </div>
+    <div class="rule">
+      <span class="tag">Rule 04</span>
+      <h4>Keep it welcoming</h4>
+      <p>New players get patience first, corrections second.</p>
+    </div>
+  </div>
+</section>
+
+<section id="faculty">
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <span class="num">02 — Staff Directory</span>
+        <h2 class="section-title">Faculty</h2>
+      </div>
+      <p class="section-note">Leadership plus open teaching slots — this is where you'd list yourself.</p>
+    </div>
+
+    <div class="faculty">
+      <div class="faculty-card">
+        <span class="role">Principal</span>
+        <h4>CamManOfficial</h4>
+        <p>Founder &amp; director, Destroy Games VR. Runs the building and oversees the schedule.</p>
+      </div>
+      <div class="faculty-card">
+        <span class="role">Teacher</span>
+        <h4>Mr. Redbobo</h4>
+        <p>On faculty, period and subject TBA.</p>
+      </div>
+      <div class="faculty-card">
+        <span class="role">Teacher</span>
+        <h4>Mr. Hawksum</h4>
+        <p>On faculty, period and subject TBA.</p>
+      </div>
+      <div class="faculty-card">
+        <span class="role">Teacher</span>
+        <h4>Mr. Monkeyisbig</h4>
+        <p>On faculty, period and subject TBA.</p>
+      </div>
+      <div class="faculty-card">
+        <span class="role">Teacher</span>
+        <h4>Mr. Baeli75</h4>
+        <p>On faculty, period and subject TBA.</p>
+      </div>
+      <div class="faculty-card">
+        <span class="role">Teacher</span>
+        <h4>Mr. Molotov</h4>
+        <p>On faculty, period and subject TBA.</p>
+      </div>
+      <div class="faculty-card">
+        <span class="role">Teacher</span>
+        <h4>Mr. X</h4>
+        <p>On faculty, period and subject TBA.</p>
+      </div>
+      <div class="faculty-card open">
+        <span class="role">Open Position</span>
+        <h4>Teach a Period</h4>
+        <p>Have a skill worth a class? Message the office to get on the schedule.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="apply">
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <span class="num">03 — Faculty Applications</span>
+        <h2 class="section-title">Apply to Teach</h2>
+      </div>
+      <p class="section-note">Beginner-friendly or pro-level — every skill set has a period open.</p>
+    </div>
+
+    <div class="courses-empty">
+      <span class="cs-tag">Any Subject Welcome</span>
+      <h3>Applications live on their own page</h3>
+      <p>Fill out the form there — username, subject, level, and availability.</p>
+      <a href="apply-to-teach.html" class="btn btn-primary">Go to application</a>
+    </div>
+  </div>
+</section>
+
+<section id="join">
+  <div class="join">
+    <div>
+      <h2>Enrolling Teachers &amp; Students</h2>
+      <p>Getting on the schedule takes one message. No paperwork, just a headset and a topic.</p>
+      <ul class="steps">
+        <li>Join the Yeeps VR world and find the school portal.</li>
+        <li>Submit a student enrollment or a teacher application.</li>
+        <li>Get vouched in and show up — your name goes on the schedule.</li>
+      </ul>
+      <div class="cta-row" style="margin-top:22px;">
+        <a href="enroll.html" class="btn btn-primary">Enroll as a student</a>
+        <a href="apply-to-teach.html" class="btn btn-ghost">Apply to teach</a>
+      </div>
+    </div>
+    <div class="portal-code">
+      <span class="label">World Portal · CW Code</span>
+      <div class="code">yeephighschool</div>
+      <br>
+      <span class="label">Office Hours</span>
+      <div class="code">Daily, 6P–11P EST</div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div><strong>Yeeps High School</strong> — a Destroy Games VR production</div>
+  <div>Built for Yeeps VR · Meta Quest</div>
+</footer>
+
+</body>
+</html>
