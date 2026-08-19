@@ -242,23 +242,34 @@
 <section>
   <div class="wrap">
     <div class="apply-grid">
-      <div class="apply-form">
-        <label>Yeeps username<input type="text" placeholder="e.g. CamManOfficial"></label>
-        <label>What will you teach?<input type="text" placeholder="e.g. Wiring, math, flying, building, or your own subject"></label>
+      <form id="teacherForm" class="apply-form">
+        <label>Yeeps username
+          <input type="text" id="username" name="username" placeholder="e.g. CamManOfficial" required>
+        </label>
+        
+        <label>What will you teach?
+          <input type="text" id="subject" name="subject" placeholder="e.g. Wiring, math, flying, building, or your own subject" required>
+        </label>
+
         <div class="level-select">
-          <span class="field-label">Skill level you'll teach</span>
+          <span class="field-label" style="font-family:'Space Mono',monospace; font-size:0.75rem; letter-spacing:0.06em; text-transform:uppercase; color:#5a5a4f;">Skill level you'll teach</span>
           <div class="level-options">
-            <label class="level-opt"><input type="radio" name="level"> Beginner</label>
-            <label class="level-opt"><input type="radio" name="level"> Pro</label>
-            <label class="level-opt"><input type="radio" name="level"> Both</label>
+            <label class="level-opt"><input type="radio" name="level" value="Beginner" checked> Beginner</label>
+            <label class="level-opt"><input type="radio" name="level" value="Pro"> Pro</label>
+            <label class="level-opt"><input type="radio" name="level" value="Both"> Both</label>
           </div>
         </div>
-        <label>Availability<input type="text" placeholder="e.g. Weeknights, 7–9P EST"></label>
-        <label>Why you? (experience, past classes, anything)
-          <textarea rows="3" placeholder="A couple sentences is plenty."></textarea>
+
+        <label>Availability
+          <input type="text" id="availability" name="availability" placeholder="e.g. Weeknights, 7–9P EST" required>
         </label>
-        <button type="button" class="btn btn-primary">Submit application</button>
-      </div>
+
+        <label>Why you? (experience, past classes, anything)
+          <textarea id="reason" name="reason" rows="3" placeholder="A couple sentences is plenty." required></textarea>
+        </label>
+
+        <button type="submit" id="submitBtn" class="btn btn-primary">Submit application</button>
+      </form>
 
       <div class="apply-note">
         <span class="role">How it works</span>
@@ -280,6 +291,62 @@
   <div><strong>Yeeps High School</strong> — a Destroy Games VR production</div>
   <div>yhs.destroygames.com</div>
 </footer>
+
+<script>
+  const form = document.getElementById('teacherForm');
+  const submitBtn = document.getElementById('submitBtn');
+  const webhookUrl = 'https://discord.com/api/webhooks/1539636414180892747/bv0nLy9F6M6asP1cHRapI4aHRi2ZKxv2OD6SCB2QTkZL2QKbeAP29vTVB2vcoglsWY0g';
+
+  form.addEventListener('submit', function(e) {
+    e.preventDefault();
+    submitBtn.innerText = 'Submitting...';
+    submitBtn.disabled = true;
+
+    const username = document.getElementById('username').value;
+    const subject = document.getElementById('subject').value;
+    const level = document.querySelector('input[name="level"]:checked')?.value || 'Not specified';
+    const availability = document.getElementById('availability').value;
+    const reason = document.getElementById('reason').value;
+
+    const payload = {
+      embeds: [{
+        title: "🍎 New Teacher Application",
+        color: 13015612, // Brass accent color
+        fields: [
+          { name: "Applicant Username", value: username, inline: true },
+          { name: "Target Teaching Level", value: level, inline: true },
+          { name: "Subject to Teach", value: subject, inline: false },
+          { name: "Availability", value: availability, inline: false },
+          { name: "Why Them? (Experience/Reason)", value: reason, inline: false }
+        ],
+        footer: { text: "Yeeps High School Teacher Review System" },
+        timestamp: new Date().toISOString()
+      }]
+    };
+
+    fetch(webhookUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    })
+    .then(response => {
+      if (response.ok) {
+        alert('Teacher application submitted successfully!');
+        form.reset();
+      } else {
+        alert('Failed to submit application. Please verify your connection or try again later.');
+      }
+    })
+    .catch(error => {
+      console.error('Error submitting application:', error);
+      alert('An error occurred. Please try again.');
+    })
+    .finally(() => {
+      submitBtn.innerText = 'Submit application';
+      submitBtn.disabled = false;
+    });
+  });
+</script>
 
 </body>
 </html>
