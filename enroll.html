@@ -1,66 +1,361 @@
-<script>
-  document.getElementById('studentForm').addEventListener('submit', async function(e) {
-    e.preventDefault();
-
-    const username = document.getElementById('username').value;
-    const classType = document.getElementById('classType').value;
-    const level = document.getElementById('level').value;
-    const details = document.getElementById('details').value;
-
-    const formData = {
-      // REPLACE THIS STRING WITH YOUR WEB3FORMS ACCESS KEY
-      access_key: "ebd28397-8b6a-4632-8557-c9f8f33b2758", 
-      subject: "New Student Application",
-      username: username,
-      classType: classType,
-      level: level,
-      details: details
-    };
-
-    // 1. Send data to Web3Forms in the background
-    try {
-      await fetch("https://api.web3forms.com/submit", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json"
-        },
-        body: JSON.stringify(formData)
-      });
-    } catch (error) {
-      console.error("Submission error:", error);
-    }
-
-    // 2. Save locally so it appears in the list on the page right away
-    const newApp = { username, classType, level, details };
-    let apps = JSON.parse(localStorage.getItem('studentapps') || '[]');
-    apps.unshift(newApp);
-    localStorage.setItem('teacherApps', JSON.stringify(apps));
-
-    renderApps();
-    this.reset();
-  });
-
-  function renderApps() {
-    const container = document.getElementById('applicationsList');
-    let apps = JSON.parse(localStorage.getItem('studentapps') || '[]');
-
-    if(apps.length === 0){
-      container.innerHTML = '<p style="color:#777; font-size:0.9rem;">No applications submitted yet.</p>';
-      return;
-    }
-
-    container.innerHTML = apps.map(app => `
-      <div class="app-card">
-        <div class="meta">
-          <span>${app.username}</span>
-          <span>${app.level}</span>
-        </div>
-        <h4>${app.classType}</h4>
-        <p>${app.details}</p>
-      </div>
-    `).join('');
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>yeepshighschool — Student Enrollment</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Rye&family=Space+Mono:wght@400;700&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --board:#22352a;
+    --board-2:#1a2a21;
+    --chalk:#eef0e6;
+    --paper:#e9e2cd;
+    --ink:#1c2420;
+    --brass:#c69a3c;
+    --red-pen:#a4372c;
+    --line:rgba(238,240,230,0.18);
+    --radius:2px;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Work Sans',sans-serif;
+    line-height:1.5;
   }
 
-  renderApps();
+  /* Animated Top Ribbon */
+  .ribbon{
+    background: linear-gradient(90deg, #1c2420, #22352a, #1c2420);
+    background-size: 200% 200%;
+    animation: ribbonGlow 6s ease infinite;
+    color:var(--paper);
+    text-align:center;
+    font-family:'Space Mono',monospace;
+    font-size:0.72rem;
+    letter-spacing:0.12em;
+    text-transform:uppercase;
+    padding:8px 10px;
+  }
+  @keyframes ribbonGlow {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+
+  /* Header */
+  header{
+    background:
+      radial-gradient(ellipse at 20% 20%, rgba(255,255,255,0.03), transparent 40%),
+      linear-gradient(180deg, var(--board) 0%, var(--board-2) 100%);
+    color:var(--chalk);
+    padding:40px 6vw 48px;
+    border-bottom:10px solid var(--brass);
+  }
+  nav{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    max-width:1180px;
+    margin:0 auto 40px;
+    font-family:'Space Mono',monospace;
+    font-size:0.85rem;
+  }
+  nav .brand{
+    font-family:'Rye',serif;
+    font-size:1.1rem;
+    color:var(--brass);
+    text-decoration:none;
+  }
+  nav ul{
+    list-style:none;
+    display:flex;
+    gap:28px;
+    margin:0;
+    padding:0;
+  }
+  nav a{text-decoration:none; color:var(--chalk); opacity:0.85; padding-bottom:2px;}
+  nav a:hover{opacity:1; border-bottom:1px solid var(--brass);}
+
+  .hero-eyebrow{
+    font-family:'Space Mono',monospace;
+    font-size:0.75rem;
+    letter-spacing:0.18em;
+    text-transform:uppercase;
+    color:var(--brass);
+    margin-bottom:12px;
+  }
+  h1.page-title{
+    font-family:'Rye',serif;
+    font-size:clamp(2.2rem,4.5vw,3.8rem);
+    margin:0 0 12px;
+  }
+
+  /* Layout */
+  section{padding:60px 6vw;}
+  .wrap{max-width:1180px; margin:0 auto;}
+  .grid-layout{
+    display:grid;
+    grid-template-columns:1.2fr 0.8fr;
+    gap:48px;
+    align-items:start;
+  }
+
+  /* Form Styling */
+  .form-card{
+    background:var(--board);
+    color:var(--chalk);
+    padding:36px;
+    border-radius:var(--radius);
+    border-top:6px solid var(--brass);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+  }
+  .form-group{
+    margin-bottom:20px;
+  }
+  .form-group label{
+    display:block;
+    font-family:'Space Mono',monospace;
+    font-size:0.78rem;
+    letter-spacing:0.1em;
+    text-transform:uppercase;
+    color:var(--brass);
+    margin-bottom:8px;
+  }
+  .form-group input, .form-group select{
+    width:100%;
+    padding:12px 14px;
+    background:var(--board-2);
+    border:1px solid var(--line);
+    color:var(--chalk);
+    font-family:'Work Sans',sans-serif;
+    font-size:0.95rem;
+    border-radius:var(--radius);
+    outline:none;
+    transition: border-color 0.2s ease;
+  }
+  .form-group input:focus, .form-group select:focus{
+    border-color:var(--brass);
+  }
+
+  /* Interactive Buttons */
+  .btn{
+    font-family:'Space Mono',monospace;
+    font-size:0.88rem;
+    text-decoration:none;
+    padding:14px 24px;
+    border-radius:var(--radius);
+    display:inline-block;
+    border:none;
+    cursor:pointer;
+    width:100%;
+    text-align:center;
+    transition: all 0.2s ease;
+  }
+  .btn-primary{
+    background:var(--brass);
+    color:var(--board-2);
+    font-weight:700;
+  }
+  .btn-primary:hover{
+    box-shadow: 0 0 15px rgba(198, 154, 60, 0.6);
+    transform: translateY(-2px);
+  }
+
+  /* Side Card */
+  .info-card{
+    background:var(--paper);
+    border:2px solid var(--ink);
+    padding:28px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  .info-card:hover{
+    transform: translateY(-4px);
+    box-shadow: 0 6px 18px rgba(0,0,0,0.15);
+  }
+  .info-card h3{
+    font-family:'Rye',serif;
+    font-size:1.4rem;
+    margin:0 0 14px;
+  }
+
+  /* Success Reveal Modal */
+  #resultBox {
+    display:none;
+  }
+  .success-box {
+    background: var(--board-2);
+    color: var(--chalk);
+    padding: 24px;
+    border: 2px solid var(--brass);
+    border-radius: var(--radius);
+    margin-top: 24px;
+    text-align: center;
+    animation: fadeIn 0.3s ease-in-out;
+  }
+  .code-display {
+    font-family: 'Space Mono', monospace;
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: var(--brass);
+    background: var(--board);
+    padding: 12px;
+    border: 1px dashed var(--brass);
+    margin: 16px 0;
+    letter-spacing: 0.05em;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  footer{
+    background:var(--board-2);
+    color:#8c9385;
+    padding:36px 6vw;
+    font-family:'Space Mono',monospace;
+    font-size:0.75rem;
+    display:flex;
+    justify-content:space-between;
+    flex-wrap:wrap;
+    gap:12px;
+  }
+  footer strong{color:var(--brass);}
+
+  @media (max-width:820px){
+    .grid-layout{grid-template-columns:1fr;}
+    nav ul{gap:16px; font-size:0.75rem;}
+  }
+</style>
+</head>
+<body>
+
+<div class="ribbon">CW CODE: yeephighschool · OFFICIAL ENROLLMENT PORTAL</div>
+
+<header>
+  <div class="wrap">
+    <nav>
+      <a href="index.html" class="brand">yeepshighschool</a>
+      <ul>
+        <li><a href="index.html#courses">Courses</a></li>
+        <li><a href="index.html#faculty">Faculty</a></li>
+        <li><a href="index.html#rules">Handbook</a></li>
+        <li><a href="enroll.html">Enroll</a></li>
+        <li><a href="apply.html">Apply to Teach</a></li>
+        <li><a href="https://discord.gg/A3SYRf37Yf" target="_blank" rel="noopener">Discord</a></li>
+      </ul>
+    </nav>
+
+    <div class="hero-eyebrow">Student Registration</div>
+    <h1 class="page-title">Enroll for Classes</h1>
+  </div>
+</header>
+
+<section>
+  <div class="wrap">
+    <div class="grid-layout">
+      
+      <!-- Enrollment Form -->
+      <div class="form-card">
+        <form id="enrollForm">
+          <!-- Web3Forms Key (Keeps Webhook Safe) -->
+          <input type="hidden" name="access_key" value="YOUR_WEB3FORMS_KEY_HERE">
+          <input type="hidden" name="subject" value="New Student Enrollment — yeepshighschool">
+
+          <div class="form-group">
+            <label for="username">VR / Yeeps Username</label>
+            <input type="text" id="username" name="VR_Username" placeholder="e.g. GorillaGamer123" required>
+          </div>
+
+          <div class="form-group">
+            <label for="discord">Discord Username</label>
+            <input type="text" id="discord" name="Discord_Username" placeholder="e.g. username#0000" required>
+          </div>
+
+          <div class="form-group">
+            <label for="class_interest">Primary Class Interest</label>
+            <select id="class_interest" name="Preferred_Class" required>
+              <option value="" disabled selected>Select a class...</option>
+              <option value="Wiring Class">Wiring Class</option>
+              <option value="Math Class">Math Class</option>
+              <option value="Flying Class">Flying Class</option>
+              <option value="Building Class">Building Class</option>
+              <option value="Gym Class">Gym Class</option>
+            </select>
+          </div>
+
+          <button type="submit" class="btn btn-primary">Submit Enrollment</button>
+        </form>
+
+        <!-- Result Box (Auto Code Reveal) -->
+        <div id="resultBox"></div>
+      </div>
+
+      <!-- Sidebar Information -->
+      <div class="info-card">
+        <h3>Class Rules & Information</h3>
+        <p><strong>CW Portal Code:</strong> yeephighschool</p>
+        <p><strong>Office Hours:</strong> Daily, 6P–11P EST</p>
+        <hr style="border: 0; border-top: 1px solid var(--ink); margin: 20px 0;">
+        <p style="font-size: 0.9rem; color: #4a4a40;">Once you submit your enrollment form, your CW Code will appear right on the screen and your profile will be sent to the staff directory on Discord.</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div><strong>yeepshighschool</strong> — Destroy Games VR</div>
+  <div>Built for Yeeps VR · Meta Quest</div>
+</footer>
+
+<script>
+const form = document.getElementById('enrollForm');
+const resultBox = document.getElementById('resultBox');
+
+form.addEventListener('submit', function(e) {
+  e.preventDefault();
+  const formData = new FormData(form);
+  const object = Object.fromEntries(formData);
+  const json = JSON.stringify(object);
+
+  resultBox.style.display = "block";
+  resultBox.innerHTML = "<p style='text-align:center; margin-top:20px;'>Submitting your enrollment...</p>";
+
+  fetch('https://api.web3forms.com/submit', {
+      method: 'POST',
+      headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+      },
+      body: json
+  })
+  .then(async (response) => {
+      let json = await response.json();
+      if (response.status == 200) {
+          resultBox.innerHTML = `
+            <div class="success-box">
+              <h3 style="color: var(--brass); margin: 0 0 8px;">🎉 You're Enrolled!</h3>
+              <p style="margin: 0; font-size: 0.9rem;">Your registration is complete. Here is your official entry code:</p>
+              <div class="code-display">yeephighschool</div>
+              <button onclick="navigator.clipboard.writeText('yeephighschool'); alert('CW Code copied!');" class="btn btn-primary">Copy CW Code</button>
+            </div>
+          `;
+          form.reset();
+      } else {
+          resultBox.innerHTML = `<p style="color: var(--red-pen); text-align: center; margin-top: 15px;">${json.message}</p>`;
+      }
+  })
+  .catch(error => {
+      resultBox.innerHTML = "<p style='color: var(--red-pen); text-align: center; margin-top: 15px;'>Something went wrong. Please try again!</p>";
+  });
+});
 </script>
+
+</body>
+</html>
