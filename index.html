@@ -16,7 +16,7 @@
     --brass:#c69a3c;
     --red-pen:#a4372c;
     --line:rgba(238,240,230,0.18);
-    --radius:2px;
+    --radius:4px;
   }
   *{box-sizing:border-box;}
   html{scroll-behavior:smooth;}
@@ -28,16 +28,23 @@
     line-height:1.5;
   }
 
-  /* Top Banner */
+  /* Animated Top Ribbon */
   .ribbon{
-    background:var(--ink);
+    background: linear-gradient(90deg, #1c2420, #22352a, #1c2420);
+    background-size: 200% 200%;
+    animation: ribbonGlow 6s ease infinite;
     color:var(--paper);
     text-align:center;
     font-family:'Space Mono',monospace;
     font-size:0.72rem;
     letter-spacing:0.12em;
     text-transform:uppercase;
-    padding:7px 10px;
+    padding:8px 10px;
+  }
+  @keyframes ribbonGlow {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
   }
 
   /* Header */
@@ -61,9 +68,10 @@
   }
   nav .brand{
     font-family:'Rye',serif;
-    font-size:1.1rem;
+    font-size:1.2rem;
     color:var(--brass);
     text-decoration:none;
+    text-shadow: 0 0 10px rgba(198, 154, 60, 0.3);
   }
   nav ul{
     list-style:none;
@@ -72,8 +80,8 @@
     margin:0;
     padding:0;
   }
-  nav a{text-decoration:none; color:var(--chalk); opacity:0.85; padding-bottom:2px;}
-  nav a:hover{opacity:1; border-bottom:1px solid var(--brass);}
+  nav a{text-decoration:none; color:var(--chalk); opacity:0.85; padding-bottom:2px; transition: all 0.2s ease;}
+  nav a:hover{opacity:1; color:var(--brass); border-bottom:1px solid var(--brass);}
 
   .hero{
     max-width:1180px;
@@ -104,6 +112,7 @@
     margin:0 0 30px;
   }
 
+  /* Interactive Glowing Buttons */
   .cta-row{display:flex; gap:14px; flex-wrap:wrap;}
   .btn{
     font-family:'Space Mono',monospace;
@@ -114,15 +123,26 @@
     display:inline-block;
     border:1px solid transparent;
     cursor:pointer;
+    transition: all 0.2s ease;
   }
   .btn-primary{background:var(--brass); color:var(--board-2); font-weight:700;}
+  .btn-primary:hover{
+    box-shadow: 0 0 15px rgba(198, 154, 60, 0.6);
+    transform: translateY(-2px);
+  }
   .btn-ghost{border-color:var(--line); color:var(--chalk);}
+  .btn-ghost:hover{
+    border-color:var(--brass);
+    color:var(--brass);
+    transform: translateY(-2px);
+  }
 
   .schedule-card{
     background:rgba(238,240,230,0.05);
     border:1px solid var(--line);
     border-radius:var(--radius);
     padding:22px 24px;
+    backdrop-filter: blur(4px);
   }
   .schedule-card h3{
     font-family:'Space Mono',monospace;
@@ -158,17 +178,22 @@
     margin:6px 0 0;
   }
 
-  /* Course Grid */
+  /* Interactive Cards */
   .courses{
     display:grid;
     grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
-    gap:2px;
-    background:var(--ink);
-    border:2px solid var(--ink);
+    gap:16px;
   }
   .course{
     background:var(--paper);
     padding:26px 24px 24px;
+    border:2px solid var(--ink);
+    border-radius:var(--radius);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  .course:hover{
+    transform: translateY(-4px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
   }
   .course .period-tag{
     font-family:'Space Mono',monospace;
@@ -187,21 +212,26 @@
   .course p{
     font-size:0.9rem;
     color:#4a4a40;
-    margin:0 0 14px;
+    margin:0;
   }
 
-  /* Faculty */
+  /* Expanded Faculty Grid */
   .faculty{
     display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-    gap:26px;
+    grid-template-columns:repeat(auto-fill,minmax(230px,1fr));
+    gap:20px;
   }
   .faculty-card{
     background:var(--board);
     color:var(--chalk);
-    padding:26px 22px;
+    padding:22px 20px;
     border-radius:var(--radius);
     border-top:4px solid var(--brass);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  .faculty-card:hover{
+    transform: translateY(-4px);
+    box-shadow: 0 6px 18px rgba(0,0,0,0.25);
   }
   .faculty-card .role{
     font-family:'Space Mono',monospace;
@@ -210,15 +240,15 @@
     text-transform:uppercase;
     color:var(--brass);
     display:block;
-    margin-bottom:8px;
+    margin-bottom:6px;
   }
   .faculty-card h4{
     font-family:'Rye',serif;
-    font-size:1.3rem;
-    margin:0 0 8px;
+    font-size:1.2rem;
+    margin:0 0 6px;
   }
   .faculty-card p{
-    font-size:0.87rem;
+    font-size:0.85rem;
     color:#c9d0c1;
     margin:0;
   }
@@ -271,6 +301,7 @@
       <li><a href="#courses">Courses</a></li>
       <li><a href="#faculty">Faculty</a></li>
       <li><a href="#rules">Handbook</a></li>
+      <li><a href="enroll.html">Enroll</a></li>
       <li><a href="apply.html">Apply to Teach</a></li>
       <li><a href="https://discord.gg/A3SYRf37Yf" target="_blank" rel="noopener">Discord</a></li>
     </ul>
@@ -282,8 +313,8 @@
       <h1 class="hero-title">yeepshighschool</h1>
       <p class="sub">A real classroom world inside Yeeps VR — teachers run live periods for total beginners and seasoned pros alike.</p>
       <div class="cta-row">
-        <a href="apply.html" class="btn btn-primary">Apply to Teach</a>
-        <a href="https://discord.gg/A3SYRf37Yf" target="_blank" rel="noopener" class="btn btn-ghost">Join Discord</a>
+        <a href="enroll.html" class="btn btn-primary">Student Enrollment</a>
+        <a href="apply.html" class="btn btn-ghost">Apply to Teach</a>
       </div>
     </div>
 
@@ -325,6 +356,11 @@
         <h4>Building Class</h4>
         <p>Map and structure building basics for new creators.</p>
       </div>
+      <div class="course">
+        <span class="period-tag">Class</span>
+        <h4>Gym Class</h4>
+        <p>Movement drills, physical movement tactics, and movement challenges.</p>
+      </div>
     </div>
   </div>
 </section>
@@ -354,7 +390,7 @@
     <div class="section-head">
       <div>
         <span class="num">02 — Staff Directory</span>
-        <h2 class="section-title">Faculty</h2>
+        <h2 class="section-title">Faculty Roster</h2>
       </div>
     </div>
 
@@ -366,17 +402,92 @@
       </div>
       <div class="faculty-card">
         <span class="role">Teacher</span>
-        <h4>Mr. Redbobo</h4>
+        <h4>Mr. Slimestar</h4>
         <p>On faculty, period and subject TBA.</p>
       </div>
       <div class="faculty-card">
         <span class="role">Teacher</span>
-        <h4>Mr. Hawksum</h4>
+        <h4>Mr. Sun Rat</h4>
         <p>On faculty, period and subject TBA.</p>
       </div>
       <div class="faculty-card">
         <span class="role">Teacher</span>
-        <h4>Mr. Monkeyisbig</h4>
+        <h4>Mr. O</h4>
+        <p>On faculty, period and subject TBA.</p>
+      </div>
+      <div class="faculty-card">
+        <span class="role">Teacher</span>
+        <h4>Mr. Da Monkey</h4>
+        <p>On faculty, period and subject TBA.</p>
+      </div>
+      <div class="faculty-card">
+        <span class="role">Teacher</span>
+        <h4>Mr. Tox67</h4>
+        <p>On faculty, period and subject TBA.</p>
+      </div>
+      <div class="faculty-card">
+        <span class="role">Teacher</span>
+        <h4>Mr. Bacon</h4>
+        <p>On faculty, period and subject TBA.</p>
+      </div>
+      <div class="faculty-card">
+        <span class="role">Teacher</span>
+        <h4>Mr. LiquidFire</h4>
+        <p>On faculty, period and subject TBA.</p>
+      </div>
+      <div class="faculty-card">
+        <span class="role">Teacher</span>
+        <h4>Mr. Carbourd</h4>
+        <p>On faculty, period and subject TBA.</p>
+      </div>
+      <div class="faculty-card">
+        <span class="role">Teacher</span>
+        <h4>Mr. Huggy</h4>
+        <p>On faculty, period and subject TBA.</p>
+      </div>
+      <div class="faculty-card">
+        <span class="role">Teacher</span>
+        <h4>Mr. Purplefrog</h4>
+        <p>On faculty, period and subject TBA.</p>
+      </div>
+      <div class="faculty-card">
+        <span class="role">Teacher</span>
+        <h4>Mr. Spider Monkey</h4>
+        <p>On faculty, period and subject TBA.</p>
+      </div>
+      <div class="faculty-card">
+        <span class="role">Teacher</span>
+        <h4>Mr. Blonderrs</h4>
+        <p>On faculty, period and subject TBA.</p>
+      </div>
+      <div class="faculty-card">
+        <span class="role">Teacher</span>
+        <h4>Mr. Itzscoots</h4>
+        <p>On faculty, period and subject TBA.</p>
+      </div>
+      <div class="faculty-card">
+        <span class="role">Teacher</span>
+        <h4>Mr. Frotix</h4>
+        <p>On faculty, period and subject TBA.</p>
+      </div>
+      <div class="faculty-card">
+        <span class="role">Teacher</span>
+        <h4>Mr. Zaronk</h4>
+        <p>On faculty, period and subject TBA.</p>
+      </div>
+      <div class="faculty-card">
+        <span class="role">Teacher</span>
+        <h4>Mr. Noodle</h4>
+        <p>On faculty, period and subject TBA.</p>
+      </div>
+      <div class="faculty-card">
+        <span class="role">Teacher</span>
+        <h4>Mr. Frog Turtle</h4>
+        <p>On faculty, period and subject TBA.</p>
+      </div>
+      <div class="faculty-card">
+        <span class="role">Teacher</span>
+        <h4>Mr. Molotov</h4>
         <p>On faculty, period and subject TBA.</p>
       </div>
     </div>
